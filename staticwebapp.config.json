@@ -1,10 +1,6 @@
 {
   "routes": [
     {
-      "route": "/api/roleAssignments",
-      "allowedRoles": ["anonymous"]
-    },
-    {
       "route": "/api/*",
       "allowedRoles": ["authenticated"]
     },
@@ -27,7 +23,6 @@
     "Cache-Control": "no-store"
   },
   "auth": {
-    "rolesSource": "/api/roleAssignments",
     "identityProviders": {
       "google": {
         "registration": {
