@@ -1,6 +1,10 @@
 import { HttpRequest } from '@azure/functions';
 
-const ALLOWED_EMAIL = 'taka@darkhaloes.com';
+// 許可するメールアドレス（Microsoft AAD: takayuki@darkhaloes.com）
+const ALLOWED_EMAILS = [
+  'taka@darkhaloes.com',
+  'takayuki@darkhaloes.com',
+];
 
 interface ClientPrincipalClaim {
   typ: string;
@@ -22,8 +26,7 @@ interface ClientPrincipal {
 export function isAuthorized(request: HttpRequest): boolean {
   const principalHeader = request.headers.get('x-ms-client-principal');
   if (!principalHeader) {
-    // ローカル開発環境では認証ヘッダーがない場合を許容
-    if (process.env.NODE_ENV === 'development' || process.env.SKIP_AUTH === 'true') {
+    if (process.env.SKIP_AUTH === 'true') {
       return true;
     }
     return false;
@@ -33,19 +36,29 @@ export function isAuthorized(request: HttpRequest): boolean {
     const decoded = Buffer.from(principalHeader, 'base64').toString('utf-8');
     const principal: ClientPrincipal = JSON.parse(decoded);
 
-    // claims からメールアドレスを取得
-    const emailClaim = principal.claims?.find(
-      (c) => c.typ === 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
-                || c.typ === 'emails'
-                || c.typ === 'email'
-    );
+    const isAllowed = (email: string) =>
+      ALLOWED_EMAILS.some((e) => e.toLowerCase() === email.toLowerCase());
 
-    if (emailClaim) {
-      return emailClaim.val === ALLOWED_EMAIL;
+    // userDetails にメールアドレスが入る場合（AAD・Google 共通）
+    if (principal.userDetails && principal.userDetails.includes('@')) {
+      return isAllowed(principal.userDetails);
     }
 
-    // userDetails にメールアドレスが入る場合もある
-    return principal.userDetails === ALLOWED_EMAIL;
+    // claims から取得（AAD の場合 preferred_username または email）
+    if (principal.claims) {
+      const emailClaim = principal.claims.find(
+        (c) =>
+          c.typ === 'preferred_username' ||
+          c.typ === 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress' ||
+          c.typ === 'emails' ||
+          c.typ === 'email'
+      );
+      if (emailClaim) {
+        return isAllowed(emailClaim.val);
+      }
+    }
+
+    return false;
   } catch {
     return false;
   }
