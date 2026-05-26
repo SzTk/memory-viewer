@@ -25,5 +25,16 @@
   },
   "globalHeaders": {
     "Cache-Control": "no-store"
+  },
+  "auth": {
+    "rolesSource": "/api/roleAssignments",
+    "identityProviders": {
+      "google": {
+        "registration": {
+          "clientIdSettingName": "GOOGLE_CLIENT_ID",
+          "clientSecretSettingName": "GOOGLE_CLIENT_SECRET"
+        }
+      }
+    }
   }
 }
