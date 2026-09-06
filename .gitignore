@@ -5,3 +5,4 @@ api/dist/
 .env
 .env.local
 *.local
+api/local.settings.json
