@@ -12,6 +12,8 @@ function parseArgs(argv: string[]): { filePath?: string; keys: string[] } {
       }
       keys.push(value)
       i++
+    } else {
+      throw new Error(`Unrecognized argument: ${argv[i]}`)
     }
   }
   return { filePath, keys }
