@@ -11,6 +11,8 @@ async function memoriesHandler(
     return { status: 403, body: JSON.stringify({ error: 'Forbidden' }) };
   }
 
+  const full = request.query.get('full') === 'true';
+
   try {
     const entities = tableClient.listEntities({
       queryOptions: {
@@ -22,7 +24,8 @@ async function memoriesHandler(
       key: string;
       updated_at: string;
       created_at: string;
-      preview: string;
+      preview?: string;
+      content?: string;
     }> = [];
 
     for await (const entity of entities) {
@@ -31,7 +34,7 @@ async function memoriesHandler(
         key: entity.rowKey as string,
         updated_at: (entity.updated_at as string) || '',
         created_at: (entity.created_at as string) || '',
-        preview: content.slice(0, 100),
+        ...(full ? { content } : { preview: content.slice(0, 100) }),
       });
     }
 
