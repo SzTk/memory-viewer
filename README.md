@@ -71,6 +71,19 @@ swa start --app-devserver-url http://localhost:5173 --api-location api
 | `/api/memories/{key}` | POST | 新規作成 |
 | `/api/memories/{key}` | DELETE | 削除 |
 
+## バックアップ・復元
+
+LLM による誤った上書き・削除に備え、記憶データのバックアップ・復元機能を用意している。
+
+- Web UI: `/backup` 画面から全件エクスポート（JSONダウンロード）、および個別レコード単位の復元（差分確認付き）ができる。
+- CLI（Claude Code などのエージェントから利用）:
+  ```bash
+  npm run backup:export                                                   # バックアップ取得
+  npm run backup:diff -- backups/memory-backup-<timestamp>.json           # 差分確認
+  npm run backup:restore -- backups/memory-backup-<timestamp>.json --key <key>  # 個別復元
+  ```
+  実行には `.env`（`.env.example` を参照）に `AZURE_STORAGE_CONNECTION_STRING` 等の設定が必要。
+
 ## 許可ユーザー
 
 `api/src/auth.ts` の `ALLOWED_EMAILS` に記載のメールアドレスのみ API アクセス可能:
