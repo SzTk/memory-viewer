@@ -8,7 +8,8 @@
     "preview": "vite preview",
     "lint": "eslint src --ext ts,tsx",
     "backup:export": "tsx scripts/backup-export.ts",
-    "backup:diff": "tsx scripts/backup-diff.ts"
+    "backup:diff": "tsx scripts/backup-diff.ts",
+    "backup:restore": "tsx scripts/backup-restore.ts"
   },
   "dependencies": {
     "date-fns": "^3.6.0",
