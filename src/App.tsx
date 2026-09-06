@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Link, useNavigate } from 'react-router-do
 import MemoryList from './components/MemoryList'
 import MemoryDetail from './components/MemoryDetail'
 import MemoryEditor from './components/MemoryEditor'
+import Backup from './components/Backup'
 
 function Header() {
   const navigate = useNavigate()
@@ -11,6 +12,9 @@ function Header() {
         🧠 Memory Viewer
       </Link>
       <div className="header-spacer" />
+      <Link to="/backup" className="header-link">
+        💾 バックアップ
+      </Link>
       <button className="btn-new" onClick={() => navigate('/memory/new')}>
         + 新規作成
       </button>
@@ -26,6 +30,7 @@ function App() {
         <main className="main">
           <Routes>
             <Route path="/" element={<MemoryList />} />
+            <Route path="/backup" element={<Backup />} />
             <Route path="/memory/new" element={<MemoryEditor mode="create" />} />
             <Route path="/memory/:key" element={<MemoryDetail />} />
             <Route path="/memory/:key/edit" element={<MemoryEditor mode="edit" />} />

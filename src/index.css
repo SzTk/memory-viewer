@@ -523,6 +523,24 @@ button:disabled {
   justify-content: flex-end;
 }
 
+/* Header link (Backup) */
+.header-link {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.header-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 /* Responsive */
 @media (max-width: 600px) {
   .main {
